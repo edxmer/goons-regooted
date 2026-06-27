@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://cutqbc5amo2rw"]
+
+[ext_resource type="Script" uid="uid://b5hohurtftdyw" path="res://scenes/map/player_movement/PlayerMovement.cs" id="1_yneg3"]
+[ext_resource type="Script" uid="uid://c7sx00f84qrsd" path="res://scenes/map/player_movement/Player_Camera.cs" id="2_imi5d"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rulse"]
+
+[node name="Node2D" type="CharacterBody2D" unique_id=961127224]
+script = ExtResource("1_yneg3")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=909964400]
+script = ExtResource("2_imi5d")
+ZoomSpeed = 0.27
+
+[node name="Node2D" type="CollisionShape2D" parent="." unique_id=1904851709]
+shape = SubResource("RectangleShape2D_rulse")

@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bes0v3afnukqu"]
+
+[ext_resource type="PackedScene" uid="uid://cutqbc5amo2rw" path="res://scenes/map/player_movement/player_movement.tscn" id="1_xrkvi"]
+[ext_resource type="PackedScene" uid="uid://djaonquhqpknk" path="res://scripts/items/Item.tscn" id="2_q2h2y"]
+
+[node name="Node2D" type="Node2D" unique_id=498088101]
+
+[node name="camera" parent="." unique_id=961127224 instance=ExtResource("1_xrkvi")]
+
+[node name="Item" parent="." unique_id=1009117469 instance=ExtResource("2_q2h2y")]
