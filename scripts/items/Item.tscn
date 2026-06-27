@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://djaonquhqpknk"]
 
 [ext_resource type="Script" uid="uid://dfhka1tomyydv" path="res://scripts/items/Item.cs" id="1_rmoff"]
-[ext_resource type="Texture2D" uid="uid://dt736gs8vtrva" path="res://assets/sprites/items/spr_item_rock.png" id="2_so8tq"]
+[ext_resource type="Texture2D" uid="uid://dt736gs8vtrva" path="res://assets/sprites/items/rock/spr_item_rock.png" id="2_so8tq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5tee2"]
 size = Vector2(16, 16)
