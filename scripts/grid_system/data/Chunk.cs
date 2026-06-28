@@ -2,6 +2,8 @@
 using Godot;
 using System;
 
+using System.Collections.Generic;
+
 public partial class Chunk : Resource
 {
 	public Slot[,] Slots { get; set; } = new Slot[GlobalParameters.CHUNK_SIZE, GlobalParameters.CHUNK_SIZE];
