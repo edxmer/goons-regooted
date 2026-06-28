@@ -59,12 +59,12 @@ public partial class Map : Resource
 	public Vector2I GetChunkCoordFromCoords(Vector2I Pos)
 	{
 		return new Vector2I(
-			Mathf.FloorToInt((float)Pos.X/Chunk.CHUNKSIZE),
-			Mathf.FloorToInt((float)Pos.Y/Chunk.CHUNKSIZE));
+			Mathf.FloorToInt((float)Pos.X/Chunk.CHUNK_SIZE),
+			Mathf.FloorToInt((float)Pos.Y/Chunk.CHUNK_SIZE));
 	}
 	public void LoadChunkEmptyBase(Vector2I ChunkCoord)
 	{
-		MapChunks[ChunkCoord.Y,ChunkCoord.X]=new Chunk(ChunkCoord*Chunk.CHUNKSIZE);
+		MapChunks[ChunkCoord.Y,ChunkCoord.X]=new Chunk(ChunkCoord*Chunk.CHUNK_SIZE);
 	}
 	
 }
