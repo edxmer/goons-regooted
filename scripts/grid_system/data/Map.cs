@@ -74,7 +74,7 @@ public partial class Map : Resource
 
 	public bool IsChunkLoadedBase(Vector2I ChunkCoord)
 	{
-		if (ChunkCoord.X<0 || ChunkCoord>=)
+		if (ChunkCoord.X<0 || ChunkCoord.X>=GlobalParameters.MAP_CHUNK_WIDTH || ChunkCoord.Y<0 || ChunkCoord.Y>=GlobalParameters.MAP_CHUNK_WIDTH)
 		return 
 	}
 	public Chunk? GetChunkAt(Vector2I Pos)
