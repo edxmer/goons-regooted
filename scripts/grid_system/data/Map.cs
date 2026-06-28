@@ -6,16 +6,14 @@ public partial class Map : Resource
 {
 	public Chunk?[,] MapChunks {get;private set;}
 	private Queue<Chunk?> ChunkQueue;
-	public static int MAPCHUNKWIDTH=100;
-	public static int MAPCHUNKHEIGHT=100;
 	public Map()
 	{
-		MapChunks=new Chunk?[MAPCHUNKHEIGHT,MAPCHUNKWIDTH];
+		MapChunks=new Chunk?[GlobalParameters.MAP_CHUNK_HEIGHT,GlobalParameters.MAP_CHUNK_WIDTH];
 		ChunkQueue = new Queue<Chunk?>();
 		ChunkQueue.Enqueue(null);
-		for (int yc=0;yc<MAPCHUNKHEIGHT;yc++)
+		for (int yc=0;yc<GlobalParameters.MAP_CHUNK_HEIGHT;yc++)
 		{
-			for (int xc=0;xc<MAPCHUNKWIDTH;xc++)
+			for (int xc=0;xc<GlobalParameters.MAP_CHUNK_WIDTH;xc++)
 			{
 				MapChunks[yc,xc]=null;
 			}
@@ -59,12 +57,12 @@ public partial class Map : Resource
 	public Vector2I GetChunkCoordFromCoords(Vector2I Pos)
 	{
 		return new Vector2I(
-			Mathf.FloorToInt((float)Pos.X/Chunk.CHUNKSIZE),
-			Mathf.FloorToInt((float)Pos.Y/Chunk.CHUNKSIZE));
+			Mathf.FloorToInt((float)Pos.X/GlobalParameters.CHUNK_SIZE),
+			Mathf.FloorToInt((float)Pos.Y/GlobalParameters.CHUNK_SIZE));
 	}
 	public void LoadChunkEmptyBase(Vector2I ChunkCoord)
 	{
-		MapChunks[ChunkCoord.Y,ChunkCoord.X]=new Chunk(ChunkCoord*Chunk.CHUNKSIZE);
+		MapChunks[ChunkCoord.Y,ChunkCoord.X]=new Chunk(ChunkCoord*GlobalParameters.CHUNK_SIZE);
 	}
 	
 }

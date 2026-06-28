@@ -6,24 +6,22 @@ using System.Collections.Generic;
 
 public partial class Chunk : Resource
 {
-	public static int CHUNKSIZE=64;
-	public Slot[,] Slots {get;set;}
+	public Slot[,] Slots { get; set; } = new Slot[GlobalParameters.CHUNK_SIZE, GlobalParameters.CHUNK_SIZE];
 	public Vector2I TopLeftPos;
 	public Chunk(Vector2I TopLeftPos)
 	{
-		Slots=new Slot[CHUNKSIZE,CHUNKSIZE];
-		for (int y=0;y<CHUNKSIZE;y++)
+		for (int y = 0; y < GlobalParameters.CHUNK_SIZE; y++)
 		{
-			for (int x=0;x<CHUNKSIZE;x++)
+			for (int x = 0; x < GlobalParameters.CHUNK_SIZE; x++)
 			{
-				Slots[y,x]=new Slot(new Vector2I (TopLeftPos.X+x,TopLeftPos.Y+y));
+				Slots[y, x] = new Slot(new Vector2I(TopLeftPos.X + x, TopLeftPos.Y + y));
 			}
 		}
 	}
 	public bool IsSlotInMe(Vector2I Pos)
 	{
-		return !(Pos.X<TopLeftPos.X || Pos.X>=TopLeftPos.X+CHUNKSIZE
-		|| Pos.Y<TopLeftPos.Y|| Pos.Y>=TopLeftPos.Y+CHUNKSIZE
+		return !(Pos.X < TopLeftPos.X || Pos.X >= TopLeftPos.X + GlobalParameters.CHUNK_SIZE
+		|| Pos.Y < TopLeftPos.Y || Pos.Y >= TopLeftPos.Y + GlobalParameters.CHUNK_SIZE
 		);
 	}
 	public Slot? GetSlotGlobal(Vector2I Pos)
@@ -32,6 +30,6 @@ public partial class Chunk : Resource
 		{
 			return null;
 		}
-		return Slots[Pos.Y-TopLeftPos.Y,Pos.X-TopLeftPos.X];
+		return Slots[Pos.Y - TopLeftPos.Y, Pos.X - TopLeftPos.X];
 	}
 }
