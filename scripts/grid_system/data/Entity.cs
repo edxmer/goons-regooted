@@ -33,4 +33,9 @@ public abstract partial class Entity : Resource
 		this.SizeMap = new bool[,] { { true } };
 		this.Weight = 1;
 	}
+	
+	public Chunk GetMyMainChunk()
+	{
+		return myMap.
+	}
 }
