@@ -8,9 +8,12 @@ public partial class Chunk : Resource
 {
 	public Vector2I TopLeftPos { get; private set; }
 	
+	public LinkedList<Entity> Entities;
+	
 	public Chunk(Vector2I topLeftPos)
 	{
 		TopLeftPos = topLeftPos;
+		Entities=new();
 	}
 
 	public bool IsSlotInMe(Vector2I Pos)
