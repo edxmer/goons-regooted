@@ -4,11 +4,18 @@ using System;
 using System.Collections.Generic;
 public partial class Map : Resource
 {
-	public Chunk?[,] MapChunks { get; private set; }
+
+	public Vector2I TopLeftPos{get;private set;}
+	public Chunk?[,] MapChunks {get;private set;}
+
 	private Queue<Chunk?> ChunkQueue;
-	public Map()
+	public Map(Vector2I TopLeftPos)
 	{
+
+		this.TopLeftPos = TopLeftPos;
+
 		MapChunks = new Chunk?[GlobalParameters.MAP_CHUNK_HEIGHT, GlobalParameters.MAP_CHUNK_WIDTH];
+
 		ChunkQueue = new Queue<Chunk?>();
 		ChunkQueue.Enqueue(null);
 		for (int yc = 0; yc < GlobalParameters.MAP_CHUNK_HEIGHT; yc++)
@@ -63,6 +70,17 @@ public partial class Map : Resource
 	public void LoadChunkEmptyBase(Vector2I ChunkCoord)
 	{
 		MapChunks[ChunkCoord.Y, ChunkCoord.X] = new Chunk(ChunkCoord * GlobalParameters.CHUNK_SIZE);
+	}
+
+	public bool IsChunkLoadedBase(Vector2I ChunkCoord)
+	{
+		if (ChunkCoord.X<0 || ChunkCoord>=)
+		return 
+	}
+	public Chunk? GetChunkAt(Vector2I Pos)
+	{
+		Vector2I ChunkCoord=GetChunkCoordFromCoords(Pos);
+		
 	}
 
 }
