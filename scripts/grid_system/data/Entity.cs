@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+
 
 public abstract partial class Entity : Resource
 {
@@ -36,6 +38,41 @@ public abstract partial class Entity : Resource
 	
 	public Chunk GetMyMainChunk()
 	{
-		return myMap.
+		return myMap.GetChunkAtPosForce(TopLeftPosition);
+	}
+	public List<Vector2I> GetAllContainedPositions()
+	{
+		List<Vector2I> poses=new();
+		for(int y=0;y<GetHeight();y++)
+		{
+			for(int x=0;x<GetWidth();x++)
+			{
+				if (SizeMap[y,x])
+				{
+					poses.Add(new Vector2I(TopLeftPosition.X+x,TopLeftPosition.Y+y));
+				}
+			}
+		}
+		return poses;
+	}
+	
+	
+	public List<Chunk> GetAllContainedChunks()
+	{
+		List<Chunk> chunks=new();
+		List<Vector2I> poses=GetAllContainedPositions();
+		foreach (Vector2I pos in poses)
+		{
+			if (SizeMap[pos.Y,pos.X])
+			{
+				var ch=myMap.GetChunkAtPosForce(pos);
+				if (!chunks.Contains(ch))
+				{
+					chunks.Add(ch);
+				}
+			}
+			
+		}
+		return chunks;
 	}
 }
