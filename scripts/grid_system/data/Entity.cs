@@ -6,6 +6,13 @@ public partial class Entity : Resource
 	public int Weight { get; protected set; }
 	public Vector2I TopLeftPosition { get; set; }
 	/*Global pos, based on the map*/
+	public Vector2I LocalTopLeftPosition /* Position within chunk */
+	{
+		get
+		{
+			return myMap.GetChunkCoordFromCoords(TopLeftPosition);
+		}
+	}
 	public bool[,] SizeMap { get; protected set; }
 
 	private Map myMap;
