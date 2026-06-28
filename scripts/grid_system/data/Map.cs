@@ -1,3 +1,4 @@
+#nullable enable
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -48,7 +49,7 @@ public partial class Map : Resource
 		{
 			QueueScrollOne();
 		}
-		if ((ChunkQueue.Peek() is not null) || !(ChunkQueue.Peek().TopLeftPos==chunk.TopLeftPos))
+		if ((ChunkQueue.Peek() is null) || !(ChunkQueue.Peek().TopLeftPos==chunk.TopLeftPos))
 		{
 			ChunkQueue.Enqueue(chunk);
 		}
