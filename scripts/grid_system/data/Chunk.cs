@@ -2,6 +2,8 @@
 using Godot;
 using System;
 
+using System.Collections.Generic;
+
 public partial class Chunk : Resource
 {
 	public static int CHUNKSIZE=64;
