@@ -14,13 +14,13 @@ public partial class Map : Resource
 
 		this.TopLeftPos = TopLeftPos;
 
-		MapChunks = new Chunk?[GlobalParameters.MAP_CHUNK_HEIGHT, GlobalParameters.MAP_CHUNK_WIDTH];
+		MapChunks = new Chunk?[Global.MAP_CHUNK_HEIGHT, Global.MAP_CHUNK_WIDTH];
 
 		ChunkQueue = new Queue<Chunk?>();
 		ChunkQueue.Enqueue(null);
-		for (int yc = 0; yc < GlobalParameters.MAP_CHUNK_HEIGHT; yc++)
+		for (int yc = 0; yc < Global.MAP_CHUNK_HEIGHT; yc++)
 		{
-			for (int xc = 0; xc < GlobalParameters.MAP_CHUNK_WIDTH; xc++)
+			for (int xc = 0; xc < Global.MAP_CHUNK_WIDTH; xc++)
 			{
 				MapChunks[yc, xc] = null;
 			}
@@ -64,17 +64,17 @@ public partial class Map : Resource
 	public Vector2I GetChunkCoordFromCoords(Vector2I Pos)
 	{
 		return new Vector2I(
-			Mathf.FloorToInt((float)Pos.X / GlobalParameters.CHUNK_SIZE),
-			Mathf.FloorToInt((float)Pos.Y / GlobalParameters.CHUNK_SIZE));
+			Mathf.FloorToInt((float)Pos.X / Global.CHUNK_SIZE),
+			Mathf.FloorToInt((float)Pos.Y / Global.CHUNK_SIZE));
 	}
 	public void LoadChunkEmptyBase(Vector2I ChunkCoord)
 	{
-		MapChunks[ChunkCoord.Y, ChunkCoord.X] = new Chunk(ChunkCoord * GlobalParameters.CHUNK_SIZE);
+		MapChunks[ChunkCoord.Y, ChunkCoord.X] = new Chunk(ChunkCoord * Global.CHUNK_SIZE);
 	}
 
 	public bool IsChunkLoadedBase(Vector2I ChunkCoord)
 	{
-		if (ChunkCoord.X<0 || ChunkCoord.X>=GlobalParameters.MAP_CHUNK_WIDTH || ChunkCoord.Y<0 || ChunkCoord.Y>=GlobalParameters.MAP_CHUNK_WIDTH)
+		if (ChunkCoord.X<0 || ChunkCoord.X>=Global.MAP_CHUNK_WIDTH || ChunkCoord.Y<0 || ChunkCoord.Y>=Global.MAP_CHUNK_WIDTH)
 		return 
 	}
 	public Chunk? GetChunkAt(Vector2I Pos)

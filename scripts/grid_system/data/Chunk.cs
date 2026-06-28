@@ -15,8 +15,8 @@ public partial class Chunk : Resource
 
 	public bool IsSlotInMe(Vector2I Pos)
 	{
-		return !(Pos.X < TopLeftPos.X || Pos.X >= TopLeftPos.X + GlobalParameters.CHUNK_SIZE
-		|| Pos.Y < TopLeftPos.Y || Pos.Y >= TopLeftPos.Y + GlobalParameters.CHUNK_SIZE
+		return !(Pos.X < TopLeftPos.X || Pos.X >= TopLeftPos.X + Global.CHUNK_SIZE
+		|| Pos.Y < TopLeftPos.Y || Pos.Y >= TopLeftPos.Y + Global.CHUNK_SIZE
 		);
 	}
 }
