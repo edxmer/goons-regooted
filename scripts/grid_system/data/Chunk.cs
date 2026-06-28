@@ -17,11 +17,15 @@ public partial class Chunk : Resource
 			}
 		}
 	}
+	public bool IsSlotInMe(Vector2I Pos)
+	{
+		return !(Pos.X<TopLeftPos.X || Pos.X>=TopLeftPos.X+CHUNKSIZE
+		|| Pos.Y<TopLeftPos.Y|| Pos.Y>=TopLeftPos.Y+CHUNKSIZE
+		);
+	}
 	public Slot? GetSlotGlobal(Vector2I Pos)
 	{
-		if (Pos.X<TopLeftPos.X || Pos.X>=TopLeftPos.X+CHUNKSIZE
-		|| Pos.Y<TopLeftPos.Y|| Pos.Y>=TopLeftPos.Y+CHUNKSIZE
-		)
+		if (!IsSlotInMe(Pos))
 		{
 			return null;
 		}

@@ -1,6 +1,69 @@
 using Godot;
 using System;
-
+using System.Collections.Generic;
 public partial class Map : Resource
 {
+	public Chunk?[,] MapChunks {get;private set;}
+	private Queue<Chunk?> ChunkQueue;
+	public static int MAPCHUNKWIDTH=100;
+	public static int MAPCHUNKHEIGHT=100;
+	public Map()
+	{
+		MapChunks=new Chunk?[MAPCHUNKHEIGHT,MAPCHUNKWIDTH];
+		ChunkQueue = new Queue<Chunk?>();
+		ChunkQueue.Enqueue(null);
+		for (int yc=0;yc<MAPCHUNKHEIGHT;yc++)
+		{
+			for (int xc=0;xc<MAPCHUNKWIDTH;xc++)
+			{
+				MapChunks[yc,xc]=null;
+			}
+		}
+	}
+	private Chunk? QueueScrollOne()
+	{
+		Chunk? a=ChunkQueue.Dequeue();
+		ChunkQueue.Enqueue(a);
+		return a;
+	}
+	private void ScrollToFirst()
+	{
+		while(QueueScrollOne() is not null)
+		{
+			continue;
+		}
+	}
+
+	private void EnqueueChunk(Chunk chunk)
+	{
+		while
+		(
+			(ChunkQueue.Peek() is not null) &&
+			 (
+				(ChunkQueue.Peek().TopLeftPos.Y<chunk.TopLeftPos.Y) 
+				|| 
+				(ChunkQueue.Peek().TopLeftPos.Y==chunk.TopLeftPos.Y && ChunkQueue.Peek().TopLeftPos.X<chunk.TopLeftPos.X)
+			 )
+		)
+		{
+			QueueScrollOne();
+		}
+		if ((ChunkQueue.Peek() is not null) || !(ChunkQueue.Peek().TopLeftPos==chunk.TopLeftPos))
+		{
+			ChunkQueue.Enqueue(chunk);
+		}
+		ScrollToFirst();
+	}
+	
+	public Vector2I GetChunkCoordFromCoords(Vector2I Pos)
+	{
+		return new Vector2I(
+			Mathf.FloorToInt((float)Pos.X/Chunk.CHUNKSIZE),
+			Mathf.FloorToInt((float)Pos.Y/Chunk.CHUNKSIZE));
+	}
+	public void LoadChunkEmptyBase(Vector2I ChunkCoord)
+	{
+		MapChunks[ChunkCoord.Y,ChunkCoord.X]=new Chunk(ChunkCoord*Chunk.CHUNKSIZE);
+	}
+	
 }
