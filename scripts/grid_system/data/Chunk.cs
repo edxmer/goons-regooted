@@ -8,9 +8,12 @@ public partial class Chunk : Resource
 
 	public readonly Entity[,] EntityGrid = new Entity[Global.CHUNK_SIZE, Global.CHUNK_SIZE];
 	
+	public LinkedList<Entity> Entities;
+	
 	public Chunk(Vector2I topLeftPos)
 	{
 		TopLeftPos = topLeftPos;
+		Entities=new();
 	}
 
 	public bool DoesContainPosition(Vector2I position)
