@@ -10,4 +10,12 @@ public partial class Slot : Resource
 		this.Position=Position;
 		this.EntityHere=null;
 	}
+	public int GetWeight()
+	{
+		if (EntityHere is null)
+		{
+			return 0;
+		}
+		return EntityHere.Weight;
+	}
 }
