@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Entity : Resource
+public abstract partial class Entity : Resource
 {
 	public int Weight{get;protected set;}
 	public Vector2I TopLeftPosition{get; set;}
