@@ -2,21 +2,30 @@
 using Godot;
 using System;
 
-using System.Collections.Generic;
-
 public partial class Chunk : Resource
 {
 	public Vector2I TopLeftPos { get; private set; }
+
+	public readonly Entity[,] EntityGrid = new Entity[Global.CHUNK_SIZE, Global.CHUNK_SIZE];
 	
 	public Chunk(Vector2I topLeftPos)
 	{
 		TopLeftPos = topLeftPos;
 	}
 
-	public bool IsSlotInMe(Vector2I Pos)
+	public bool DoesContainPosition(Vector2I position)
 	{
-		return !(Pos.X < TopLeftPos.X || Pos.X >= TopLeftPos.X + Global.CHUNK_SIZE
-		|| Pos.Y < TopLeftPos.Y || Pos.Y >= TopLeftPos.Y + Global.CHUNK_SIZE
+		return !(position.X < TopLeftPos.X || position.X >= TopLeftPos.X + Global.CHUNK_SIZE
+		|| position.Y < TopLeftPos.Y || position.Y >= TopLeftPos.Y + Global.CHUNK_SIZE
 		);
 	}
+
+	public bool HasEntityAtLocalPosition(Vector2I position)
+	{
+		if (Global.CHUNK_SIZE <= position.X || Global.CHUNK_SIZE <= position.Y) return false;
+
+		return EntityGrid[position.X, position.Y] is not null;
+	}
+
+
 }
