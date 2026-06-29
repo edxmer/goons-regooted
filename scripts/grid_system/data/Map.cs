@@ -5,14 +5,14 @@ using System.Collections.Generic;
 public partial class Map : Resource
 {
 
-	public Vector2I TopLeftPos{get;private set;}
+	public Vector2I TopLeftPosition{get;private set;}
 	public Chunk?[,] MapChunks {get;private set;}
 
 	private Queue<Chunk?> ChunkQueue;
-	public Map(Vector2I TopLeftPos)
+	public Map(Vector2I TopLeftPosition)
 	{
 
-		this.TopLeftPos = TopLeftPos;
+		this.TopLeftPosition = TopLeftPosition;
 
 		MapChunks = new Chunk?[Global.MAP_CHUNK_HEIGHT, Global.MAP_CHUNK_WIDTH];
 
@@ -46,15 +46,15 @@ public partial class Map : Resource
 		(
 			(ChunkQueue.Peek() is not null) &&
 			 (
-				(ChunkQueue.Peek().TopLeftPos.Y < chunk.TopLeftPos.Y)
+				(ChunkQueue.Peek().TopLeftPosition.Y < chunk.TopLeftPosition.Y)
 				||
-				(ChunkQueue.Peek().TopLeftPos.Y == chunk.TopLeftPos.Y && ChunkQueue.Peek().TopLeftPos.X < chunk.TopLeftPos.X)
+				(ChunkQueue.Peek().TopLeftPosition.Y == chunk.TopLeftPosition.Y && ChunkQueue.Peek().TopLeftPosition.X < chunk.TopLeftPosition.X)
 			 )
 		)
 		{
 			QueueScrollOne();
 		}
-		if ((ChunkQueue.Peek() is null) || !(ChunkQueue.Peek().TopLeftPos == chunk.TopLeftPos))
+		if ((ChunkQueue.Peek() is null) || !(ChunkQueue.Peek().TopLeftPosition == chunk.TopLeftPosition))
 		{
 			ChunkQueue.Enqueue(chunk);
 		}
@@ -64,12 +64,12 @@ public partial class Map : Resource
 	public Vector2I GetChunkCoordFromCoords(Vector2I Pos)
 	{
 		return new Vector2I(
-			Mathf.FloorToInt((float)(Pos.X-TopLeftPos.X) / Global.CHUNK_SIZE),
-			Mathf.FloorToInt((float)(Pos.Y-TopLeftPos.Y) / Global.CHUNK_SIZE));
+			Mathf.FloorToInt((float)(Pos.X-TopLeftPosition.X) / Global.CHUNK_SIZE),
+			Mathf.FloorToInt((float)(Pos.Y-TopLeftPosition.Y) / Global.CHUNK_SIZE));
 	}
 	public void LoadChunkEmptyBase(Vector2I ChunkCoord)
 	{
-		MapChunks[ChunkCoord.Y, ChunkCoord.X] = new Chunk(ChunkCoord * Global.CHUNK_SIZE + TopLeftPos);
+		MapChunks[ChunkCoord.Y, ChunkCoord.X] = new Chunk(this,ChunkCoord * Global.CHUNK_SIZE + TopLeftPosition);
 	}
 	public void GenerateChunkBase(Vector2I ChunkCoord)
 	{
@@ -79,6 +79,12 @@ public partial class Map : Resource
 	{
 		return !(ChunkCoord.X<0 || ChunkCoord.X>=Global.MAP_CHUNK_WIDTH || 
 		ChunkCoord.Y<0 || ChunkCoord.Y>=Global.MAP_CHUNK_HEIGHT);
+	}
+	public bool IsPosReal(Vector2I Position)
+	{
+		Vector2I NullStartPos=Position-TopLeftPosition;
+		return !(NullStartPos.X<0 || NullStartPos.X>=Global.MAP_CHUNK_WIDTH*Global.CHUNK_SIZE || 
+		NullStartPos.Y<0 || NullStartPos.Y>=Global.MAP_CHUNK_HEIGHT*Global.CHUNK_SIZE);
 	}
 	public bool IsChunkLoadedBase(Vector2I ChunkCoord)
 	{
@@ -109,5 +115,59 @@ public partial class Map : Resource
 		}
 		return MapChunks[ChunkCoord.Y,ChunkCoord.X];
 	}
-
+	public bool IsPosEmpty(Vector2I Pos)
+	{
+		Chunk? chHere= GetChunkAtPosForce(Pos);
+		if (chHere is null)
+		{
+			return false;
+		}
+		return chHere.EntityAtGlobalPosition(Pos) is null;
+	}
+	public bool IsEntityOrNullAtPosForce(Entity entity, Vector2I Pos)
+	{
+		if (!IsPosReal(Pos))
+		{
+			return false;
+		}
+		Entity? entMaybe=GetEntityAtPos(Pos);
+		return (entMaybe is null || entMaybe==entity);
+	}
+	public Entity? GetEntityAtPos(Vector2I globalPosition)
+	{
+		if (!IsPosReal(globalPosition))
+		{
+			return null;
+		}
+		Chunk? chHere= GetChunkAtPosForce(globalPosition);
+		if (chHere is not null)
+		{
+			return chHere.EntityAtGlobalPosition(globalPosition);
+		}
+		return null;
+	}
+	
+	public void SetPosTo(Entity? entity,Vector2I globalPosition)
+	{
+		if (!IsPosReal(globalPosition))
+		{
+			return;
+		}
+		Chunk? chHere= GetChunkAtPosForce(globalPosition);
+		if (chHere is not null)
+		{
+			chHere.SetSlotGlobalForce(entity, globalPosition);
+		}
+	}
+	public bool SetPosToSafe(Entity? entity,Vector2I globalPosition)
+	{
+		if (IsEntityOrNullAtPosForce( entity, globalPosition))
+		{
+			SetPosTo(entity,globalPosition);
+			return true;
+		}
+		return false;
+	}
+	
+	
 }

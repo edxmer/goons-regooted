@@ -5,25 +5,28 @@ using System.Collections.Generic;
 
 public partial class Chunk : Resource
 {
-	public Vector2I TopLeftPos { get; private set; }
-
+	public Vector2I TopLeftPosition { get; private set; }
+	
+	public Map myMap {get;private set;}
+	
 	public readonly Entity?[,] EntityGrid = new Entity?[Global.CHUNK_SIZE, Global.CHUNK_SIZE];
 	
-	public LinkedList<Entity> Entities;
+	public List<Entity> Entities;
 	
-	public Chunk(Vector2I topLeftPos)
+	public Chunk(Map map,Vector2I TopLeftPosition)
 	{
-		TopLeftPos = topLeftPos;
+		myMap=map;
+		this.TopLeftPosition = TopLeftPosition;
 		Entities=new();
 	}
 	
 	protected Vector2I LocalPositionToGlobal(Vector2I localPosition)
 	{
-		return localPosition+TopLeftPos;
+		return localPosition+TopLeftPosition;
 	}
 	protected Vector2I GlobalPositionToLocal(Vector2I globalPosition)
 	{
-		return globalPosition-TopLeftPos;
+		return globalPosition-TopLeftPosition;
 	}
 	
 	
@@ -35,7 +38,7 @@ public partial class Chunk : Resource
 	}
 	public bool DoesContainGlobalPosition(Vector2I position)
 	{
-		return DoesContainLocalPosition(position-TopLeftPos);
+		return DoesContainLocalPosition(position-TopLeftPosition);
 	}
 
 	public bool HasEntityAtLocalPosition(Vector2I localPosition)
@@ -58,6 +61,30 @@ public partial class Chunk : Resource
 			return EntityGrid[localPosition.Y, localPosition.X];
 		}
 		return null;
+	}
+	private bool SetSlotLocalForce(Entity? entity,Vector2I localPosition)
+	{
+		if (DoesContainLocalPosition(localPosition))
+		{
+			EntityGrid[localPosition.Y, localPosition.X] = entity;
+			return true;
+		}
+		return false;
+	}
+	public void SetSlotGlobalForce(Entity? entity,Vector2I globalPosition)
+	{
+		SetSlotLocalForce(entity,GlobalPositionToLocal(globalPosition));
+		
+	}
+	
+	private bool SetSlotLocal(Entity entity,Vector2I localPosition)
+	{
+		if (HasEntityAtLocalPosition(localPosition))
+		{
+			return false;
+		}
+		SetSlotLocalForce(entity,localPosition);
+		return true;
 	}
 	
 	private bool ResetSlotLocal(Vector2I localPosition)
@@ -91,7 +118,7 @@ public partial class Chunk : Resource
 	{
 		return Entities.Contains(entity);
 	}
-	public void RemoveEntityFromUpdater(entity)
+	public void RemoveEntityFromUpdater(Entity entity)
 	{
 		if (IsEntityInUpdater(entity))
 		{
@@ -103,19 +130,26 @@ public partial class Chunk : Resource
 	{
 		if (IsEntityInUpdater(entity))
 		{
-			
+			return true;
 		}
+		
 		if (entity is UpdateableEntity upd)
 		{
 			if (upd.HasUpdateFunction)
 			{
+				if (!DoesContainGlobalPosition(entity.TopLeftPosition))
+				{
+					return false;
+				}
 				int ind=0;
-				while(ind<Entities.Size && (Entities[ind].TopLeftPosition.Y<entity.TopLeftPosition.Y || (Entities[ind].TopLeftPosition.Y==entity.TopLeftPosition.Y && Entities[ind].TopLeftPosition.X<entity.TopLeftPosition.X )))
+				while(ind<Entities.Count && (Entities[ind].TopLeftPosition.Y<entity.TopLeftPosition.Y || (Entities[ind].TopLeftPosition.Y==entity.TopLeftPosition.Y && Entities[ind].TopLeftPosition.X<entity.TopLeftPosition.X )))
 				{
 					ind++;
 				}
+				Entities.Insert(ind,entity);
 				
 			}
 		}
+		return true;
 	}
 }
