@@ -1,3 +1,5 @@
+#nullable enable
+
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -6,6 +8,7 @@ using System.Collections.Generic;
 public abstract partial class Entity : Resource
 {
 	public int Weight { get; protected set; }
+	public bool IsOnMap {get;protected set;}
 	public Vector2I TopLeftPosition { get; set; }
 	/*Global pos, based on the map*/
 	public Vector2I LocalTopLeftPosition /* Position within chunk */
@@ -34,13 +37,15 @@ public abstract partial class Entity : Resource
 		this.TopLeftPosition = TopLeftPos;
 		this.SizeMap = new bool[,] { { true } };
 		this.Weight = 1;
+		IsOnMap=false;
 	}
 	
 	public Chunk GetMyMainChunk()
 	{
 		return myMap.GetChunkAtPosForce(TopLeftPosition);
 	}
-	public List<Vector2I> GetAllContainedPositions()
+	
+	public List<Vector2I> GetAllLocalPositions()
 	{
 		List<Vector2I> poses=new();
 		for(int y=0;y<GetHeight();y++)
@@ -49,30 +54,63 @@ public abstract partial class Entity : Resource
 			{
 				if (SizeMap[y,x])
 				{
-					poses.Add(new Vector2I(TopLeftPosition.X+x,TopLeftPosition.Y+y));
+					poses.Add(new Vector2I(x,y));
 				}
 			}
 		}
 		return poses;
 	}
-	
+	public Vector2I EnLocalPositionToGlobal(Vector2I localPose)
+	{
+		return new Vector2I(TopLeftPosition.X+localPose.X,TopLeftPosition.Y+localPose.Y);
+	}
+	public List<Vector2I> GetAllContainedPositions()
+	{
+		List<Vector2I> poses=new();
+		List<Vector2I> localPoses=GetAllLocalPositions();
+		
+		foreach (Vector2I local in localPoses)
+		{
+			poses.Add(EnLocalPositionToGlobal(local));
+
+		}
+		
+		return poses;
+	}
 	
 	public List<Chunk> GetAllContainedChunks()
 	{
 		List<Chunk> chunks=new();
-		List<Vector2I> poses=GetAllContainedPositions();
-		foreach (Vector2I pos in poses)
+		List<Vector2I> localPoses=GetAllLocalPositions();
+		foreach (Vector2I local in localPoses)
 		{
-			if (SizeMap[pos.Y,pos.X])
+			var ch=myMap.GetChunkAtPosForce(EnLocalPositionToGlobal(local));
+			if (!chunks.Contains(ch))
 			{
-				var ch=myMap.GetChunkAtPosForce(pos);
-				if (!chunks.Contains(ch))
-				{
-					chunks.Add(ch);
-				}
+				chunks.Add(ch);
 			}
 			
 		}
 		return chunks;
+	}
+	
+	
+	public void RemoveFromMap()
+	{
+		if (!IsOnMap)
+		{
+			return;
+		}
+		List<Vector2I> poses=GetAllContainedPositions();
+		foreach (Vector2I pos in poses)
+		{
+			Chunk? chCur=myMap.GetChunkAtPosIfLoaded(pos);
+			if (chCur is not null)
+			{
+				chCur.RemoveEntitySlotFromGlobalPos(this,pos);
+			}
+		}
+		
+		IsOnMap=false;
 	}
 }

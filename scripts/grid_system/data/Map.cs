@@ -69,7 +69,7 @@ public partial class Map : Resource
 	}
 	public void LoadChunkEmptyBase(Vector2I ChunkCoord)
 	{
-		MapChunks[ChunkCoord.Y, ChunkCoord.X] = new Chunk(ChunkCoord * Global.CHUNK_SIZE);
+		MapChunks[ChunkCoord.Y, ChunkCoord.X] = new Chunk(ChunkCoord * Global.CHUNK_SIZE + TopLeftPos);
 	}
 	public void GenerateChunkBase(Vector2I ChunkCoord)
 	{
@@ -77,7 +77,8 @@ public partial class Map : Resource
 	}
 	public bool IsChunkCoordInBounds(Vector2I ChunkCoord)
 	{
-		return (ChunkCoord.X<0 || ChunkCoord.X>=Global.MAP_CHUNK_WIDTH || ChunkCoord.Y<0 || ChunkCoord.Y>=Global.MAP_CHUNK_WIDTH);
+		return !(ChunkCoord.X<0 || ChunkCoord.X>=Global.MAP_CHUNK_WIDTH || 
+		ChunkCoord.Y<0 || ChunkCoord.Y>=Global.MAP_CHUNK_HEIGHT);
 	}
 	public bool IsChunkLoadedBase(Vector2I ChunkCoord)
 	{

@@ -7,7 +7,7 @@ public partial class Chunk : Resource
 {
 	public Vector2I TopLeftPos { get; private set; }
 
-	public readonly Entity[,] EntityGrid = new Entity[Global.CHUNK_SIZE, Global.CHUNK_SIZE];
+	public readonly Entity?[,] EntityGrid = new Entity?[Global.CHUNK_SIZE, Global.CHUNK_SIZE];
 	
 	public LinkedList<Entity> Entities;
 	
@@ -16,20 +16,106 @@ public partial class Chunk : Resource
 		TopLeftPos = topLeftPos;
 		Entities=new();
 	}
-
-	public bool DoesContainPosition(Vector2I position)
+	
+	protected Vector2I LocalPositionToGlobal(Vector2I localPosition)
 	{
-		return !(position.X < TopLeftPos.X || position.X >= TopLeftPos.X + Global.CHUNK_SIZE
-		|| position.Y < TopLeftPos.Y || position.Y >= TopLeftPos.Y + Global.CHUNK_SIZE
+		return localPosition+TopLeftPos;
+	}
+	protected Vector2I GlobalPositionToLocal(Vector2I globalPosition)
+	{
+		return globalPosition-TopLeftPos;
+	}
+	
+	
+	public bool DoesContainLocalPosition(Vector2I localPosition)
+	{
+		return !(localPosition.X < 0 || localPosition.X >= Global.CHUNK_SIZE
+		|| localPosition.Y < 0 || localPosition.Y >= Global.CHUNK_SIZE
 		);
 	}
-
-	public bool HasEntityAtLocalPosition(Vector2I position)
+	public bool DoesContainGlobalPosition(Vector2I position)
 	{
-		if (Global.CHUNK_SIZE <= position.X || Global.CHUNK_SIZE <= position.Y) return false;
-
-		return EntityGrid[position.X, position.Y] is not null;
+		return DoesContainLocalPosition(position-TopLeftPos);
 	}
 
+	public bool HasEntityAtLocalPosition(Vector2I localPosition)
+	{
+		return EntityAtLocalPosition(localPosition) is not null;
+	}
+	public Entity? EntityAtLocalPosition(Vector2I localPosition)
+	{
+		if (DoesContainLocalPosition(localPosition))
+		{
+			return EntityGrid[localPosition.Y, localPosition.X];
+		}
+		return null;
+	}
+	public Entity? EntityAtGlobalPosition(Vector2I globalPosition)
+	{
+		Vector2I localPosition=GlobalPositionToLocal(globalPosition);
+		if (DoesContainLocalPosition(localPosition))
+		{
+			return EntityGrid[localPosition.Y, localPosition.X];
+		}
+		return null;
+	}
+	
+	private bool ResetSlotLocal(Vector2I localPosition)
+	{
+		if (HasEntityAtLocalPosition(localPosition))
+		{
+			EntityGrid[localPosition.Y, localPosition.X] = null;
+			return true;
+		}
+		return false;
+	}
 
+	
+	public bool ResetSlotGlobal(Vector2I globalPosition)
+	{
+		return ResetSlotLocal(GlobalPositionToLocal(globalPosition));
+	}
+	public bool RemoveEntitySlotFromLocalPos(Entity entity,Vector2I localPosition)
+	{
+		if (EntityAtLocalPosition(localPosition)==entity)
+		{
+			return ResetSlotLocal(localPosition);
+		}
+		return false;
+	}
+	public bool RemoveEntitySlotFromGlobalPos(Entity entity,Vector2I globalPosition)
+	{
+		return RemoveEntitySlotFromLocalPos(entity,GlobalPositionToLocal(globalPosition));
+	}
+	public bool IsEntityInUpdater(Entity entity)
+	{
+		return Entities.Contains(entity);
+	}
+	public void RemoveEntityFromUpdater(entity)
+	{
+		if (IsEntityInUpdater(entity))
+		{
+			Entities.Remove(entity);
+		}
+	}
+	
+	public bool LogEntityToUpdater(Entity entity)
+	{
+		if (IsEntityInUpdater(entity))
+		{
+			
+		}
+		if (entity is UpdateableEntity upd)
+		{
+			if (upd.HasUpdateFunction)
+			{
+				int ind=0;
+				while(ind<Entities.Size && (Entities[ind].TopLeftPosition.Y<entity.TopLeftPosition.Y || (Entities[ind].TopLeftPosition.Y==entity.TopLeftPosition.Y && Entities[ind].TopLeftPosition.X<entity.TopLeftPosition.X )))
+				{
+					ind++;
+				}
+				
+			}
+		}
+	}
 }
