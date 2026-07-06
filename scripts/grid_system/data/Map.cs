@@ -167,6 +167,19 @@ public partial class Map : Resource
 		}
 		return false;
 	}
-	
+	public void UpdateMap(int TickNumber)
+	{
+		if (TickNumber<0 || TickNumber>19)
+		{
+			return;
+		}
+		Chunk? scroller=QueueScrollOne();
+		while (scroller is not null)
+		{
+			((Chunk)scroller).UpdateChunk(TickNumber);
+			
+			scroller=QueueScrollOne();
+		}
+	}
 	
 }
