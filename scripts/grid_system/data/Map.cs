@@ -1,7 +1,9 @@
 #nullable enable
+
 using Godot;
 using System;
 using System.Collections.Generic;
+
 public partial class Map : Resource
 {
 
@@ -9,6 +11,7 @@ public partial class Map : Resource
 	public Chunk?[,] MapChunks {get;private set;}
 
 	private Queue<Chunk?> _chunkQueue;
+
 	public Map(Vector2I TopLeftPosition) : base()
 	{
 		this.TopLeftPosition = TopLeftPosition;
@@ -25,12 +28,14 @@ public partial class Map : Resource
 			}
 		}
 	}
+
 	private Chunk? QueueScrollOne()
 	{
 		Chunk? a = _chunkQueue.Dequeue();
 		_chunkQueue.Enqueue(a);
 		return a;
 	}
+
 	private void ScrollToFirst()
 	{
 		while (QueueScrollOne() is not null)
@@ -66,25 +71,30 @@ public partial class Map : Resource
 			Mathf.FloorToInt((float)(Pos.X-TopLeftPosition.X) / Global.CHUNK_SIZE),
 			Mathf.FloorToInt((float)(Pos.Y-TopLeftPosition.Y) / Global.CHUNK_SIZE));
 	}
+
 	public void LoadChunkEmptyBase(Vector2I ChunkCoord)
 	{
 		MapChunks[ChunkCoord.Y, ChunkCoord.X] = new Chunk(this,ChunkCoord * Global.CHUNK_SIZE + TopLeftPosition);
 	}
+
 	public void GenerateChunkBase(Vector2I ChunkCoord)
 	{
 		LoadChunkEmptyBase( ChunkCoord);
 	}
+
 	public bool IsChunkCoordInBounds(Vector2I ChunkCoord)
 	{
 		return !(ChunkCoord.X<0 || ChunkCoord.X>=Global.MAP_CHUNK_WIDTH || 
 		ChunkCoord.Y<0 || ChunkCoord.Y>=Global.MAP_CHUNK_HEIGHT);
 	}
+
 	public bool IsPosReal(Vector2I Position)
 	{
 		Vector2I NullStartPos=Position-TopLeftPosition;
 		return !(NullStartPos.X<0 || NullStartPos.X>=Global.MAP_CHUNK_WIDTH*Global.CHUNK_SIZE || 
 		NullStartPos.Y<0 || NullStartPos.Y>=Global.MAP_CHUNK_HEIGHT*Global.CHUNK_SIZE);
 	}
+
 	public bool IsChunkLoadedBase(Vector2I ChunkCoord)
 	{
 		if (!IsChunkCoordInBounds( ChunkCoord))
@@ -105,6 +115,7 @@ public partial class Map : Resource
 		}
 		return MapChunks[ChunkCoord.Y,ChunkCoord.X];
 	}
+
 	public Chunk? GetChunkAtPosIfLoaded(Vector2I Pos)
 	{
 		Vector2I ChunkCoord=GetChunkCoordFromCoords(Pos);
@@ -114,6 +125,7 @@ public partial class Map : Resource
 		}
 		return MapChunks[ChunkCoord.Y,ChunkCoord.X];
 	}
+
 	public bool IsPosEmpty(Vector2I Pos)
 	{
 		Chunk? chHere= GetChunkAtPosForce(Pos);
@@ -123,6 +135,7 @@ public partial class Map : Resource
 		}
 		return chHere.EntityAtGlobalPosition(Pos) is null;
 	}
+
 	public bool IsEntityOrNullAtPosForce(Entity? entity, Vector2I Pos)
 	{
 		if (!IsPosReal(Pos))
@@ -132,6 +145,7 @@ public partial class Map : Resource
 		Entity? entMaybe = GetEntityAtPos(Pos);
 		return entMaybe is null || entMaybe==entity;
 	}
+
 	public Entity? GetEntityAtPos(Vector2I globalPosition)
 	{
 		if (!IsPosReal(globalPosition))
@@ -158,6 +172,7 @@ public partial class Map : Resource
 			chHere.SetSlotGlobalForce(entity, globalPosition);
 		}
 	}
+
 	public bool SetPosToSafe(Entity? entity,Vector2I globalPosition)
 	{
 		if (IsEntityOrNullAtPosForce(entity, globalPosition))
@@ -167,6 +182,7 @@ public partial class Map : Resource
 		}
 		return false;
 	}
+
 	public void UpdateMap(int TickNumber)
 	{
 		if (TickNumber<0 || TickNumber>19)
@@ -181,5 +197,4 @@ public partial class Map : Resource
 			scroller=QueueScrollOne();
 		}
 	}
-	
 }
