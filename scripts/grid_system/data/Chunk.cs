@@ -5,19 +5,18 @@ using System.Collections.Generic;
 
 public partial class Chunk : Resource
 {
-	public Vector2I TopLeftPosition { get; private set; }
-	
-	public Map myMap {get;private set;}
-	
+	public Biome Biome { get; private set;}
+	public Vector2I TopLeftPosition { get; private set; }	
+	public Map Map {get;private set;}
 	public readonly Entity?[,] EntityGrid = new Entity?[Global.CHUNK_SIZE, Global.CHUNK_SIZE];
+	public List<UpdateableEntity> Entities = new();
 	
-	public List<UpdateableEntity> Entities;
-	
-	public Chunk(Map map,Vector2I TopLeftPosition) : base()
+	public Chunk(Map map, Vector2I TopLeftPosition) : base()
 	{
-		myMap=map;
+		Map = map;
 		this.TopLeftPosition = TopLeftPosition;
-		Entities=new();
+
+		Biome = Biome.GetBiomeFromPosition(TopLeftPosition); // Ez alapján renderelnénk a hátteret (földet)
 	}
 	
 	protected Vector2I LocalPositionToGlobal(Vector2I localPosition)
