@@ -8,15 +8,15 @@ public partial class Map : Resource
 	public Vector2I TopLeftPosition{get;private set;}
 	public Chunk?[,] MapChunks {get;private set;}
 
-	private Queue<Chunk?> ChunkQueue;
+	private Queue<Chunk?> _chunkQueue;
 	public Map(Vector2I TopLeftPosition) : base()
 	{
 		this.TopLeftPosition = TopLeftPosition;
 
 		MapChunks = new Chunk?[Global.MAP_CHUNK_HEIGHT, Global.MAP_CHUNK_WIDTH];
 
-		ChunkQueue = new Queue<Chunk?>();
-		ChunkQueue.Enqueue(null);
+		_chunkQueue = new Queue<Chunk?>();
+		_chunkQueue.Enqueue(null);
 		for (int yc = 0; yc < Global.MAP_CHUNK_HEIGHT; yc++)
 		{
 			for (int xc = 0; xc < Global.MAP_CHUNK_WIDTH; xc++)
@@ -27,8 +27,8 @@ public partial class Map : Resource
 	}
 	private Chunk? QueueScrollOne()
 	{
-		Chunk? a = ChunkQueue.Dequeue();
-		ChunkQueue.Enqueue(a);
+		Chunk? a = _chunkQueue.Dequeue();
+		_chunkQueue.Enqueue(a);
 		return a;
 	}
 	private void ScrollToFirst()
@@ -43,19 +43,19 @@ public partial class Map : Resource
 	{
 		while
 		(
-			(ChunkQueue.Peek() is not null) &&
+			(_chunkQueue.Peek() is not null) &&
 			 (
-				(ChunkQueue.Peek()!.TopLeftPosition.Y < chunk.TopLeftPosition.Y)
+				(_chunkQueue.Peek()!.TopLeftPosition.Y < chunk.TopLeftPosition.Y)
 				||
-				(ChunkQueue.Peek()!.TopLeftPosition.Y == chunk.TopLeftPosition.Y && ChunkQueue.Peek()!.TopLeftPosition.X < chunk.TopLeftPosition.X)
+				(_chunkQueue.Peek()!.TopLeftPosition.Y == chunk.TopLeftPosition.Y && _chunkQueue.Peek()!.TopLeftPosition.X < chunk.TopLeftPosition.X)
 			 )
 		)
 		{
 			QueueScrollOne();
 		}
-		if ((ChunkQueue.Peek() is null) || !(ChunkQueue.Peek()!.TopLeftPosition == chunk.TopLeftPosition))
+		if ((_chunkQueue.Peek() is null) || !(_chunkQueue.Peek()!.TopLeftPosition == chunk.TopLeftPosition))
 		{
-			ChunkQueue.Enqueue(chunk);
+			_chunkQueue.Enqueue(chunk);
 		}
 		ScrollToFirst();
 	}
