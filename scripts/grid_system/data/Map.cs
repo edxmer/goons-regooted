@@ -169,6 +169,10 @@ public partial class Map : Resource
 	}
 	public void UpdateMap(int TickNumber)
 	{
+		if (TickNumber<0 || TickNumber>19)
+		{
+			return;
+		}
 		Chunk? scroller=QueueScrollOne();
 		while (scroller is not null)
 		{
