@@ -154,9 +154,13 @@ public partial class Chunk : Resource
 		}
 		return true;
 	}
-	public void updateChunk(int TickNumber)
+	public void UpdateChunk(int TickNumber)
 	{
-		List<Entity> doUpdateTo=new List<Entity> (Entities);
+		List<UpdateableEntity> doUpdateTo=new List<UpdateableEntity> (Entities);
+		foreach (UpdateableEntity ent in doUpdateTo)
+		{
+			ent.OnUpdate(TickNumber);
+		}
 		
 	}
 }

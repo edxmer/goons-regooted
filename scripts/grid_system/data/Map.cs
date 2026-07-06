@@ -167,6 +167,9 @@ public partial class Map : Resource
 		}
 		return false;
 	}
-	
+	public void UpdateMap(int TickNumber)
+	{
+		
+	}
 	
 }
