@@ -123,14 +123,14 @@ public partial class Map : Resource
 		}
 		return chHere.EntityAtGlobalPosition(Pos) is null;
 	}
-	public bool IsEntityOrNullAtPosForce(Entity entity, Vector2I Pos)
+	public bool IsEntityOrNullAtPosForce(Entity? entity, Vector2I Pos)
 	{
 		if (!IsPosReal(Pos))
 		{
 			return false;
 		}
-		Entity? entMaybe=GetEntityAtPos(Pos);
-		return (entMaybe is null || entMaybe==entity);
+		Entity? entMaybe = GetEntityAtPos(Pos);
+		return entMaybe is null || entMaybe==entity;
 	}
 	public Entity? GetEntityAtPos(Vector2I globalPosition)
 	{
@@ -160,7 +160,7 @@ public partial class Map : Resource
 	}
 	public bool SetPosToSafe(Entity? entity,Vector2I globalPosition)
 	{
-		if (IsEntityOrNullAtPosForce( entity, globalPosition))
+		if (IsEntityOrNullAtPosForce(entity, globalPosition))
 		{
 			SetPosTo(entity,globalPosition);
 			return true;
