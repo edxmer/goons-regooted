@@ -83,7 +83,7 @@ public partial class Map : Resource
 		LoadChunkEmptyBase( ChunkCoord);
 	}
 
-	public bool IsChunkCoordInBounds(Vector2I ChunkCoord)
+	public static bool IsChunkCoordInBounds(Vector2I ChunkCoord)
 	{
 		return !(ChunkCoord.X<0 || ChunkCoord.X>=Global.MAP_CHUNK_WIDTH || 
 		ChunkCoord.Y<0 || ChunkCoord.Y>=Global.MAP_CHUNK_HEIGHT);
@@ -187,7 +187,7 @@ public partial class Map : Resource
 	public void UpdateMap(int TickNumber)
 	{
 		if (TickNumber<0 || TickNumber>19) throw new Exception("Tick number is not within the allowed bound: [0, 20)");
-		
+
 		Chunk? scroller=QueueScrollOne();
 		while (scroller is not null)
 		{
