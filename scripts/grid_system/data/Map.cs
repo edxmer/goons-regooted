@@ -45,15 +45,15 @@ public partial class Map : Resource
 		(
 			(ChunkQueue.Peek() is not null) &&
 			 (
-				(ChunkQueue.Peek().TopLeftPosition.Y < chunk.TopLeftPosition.Y)
+				(ChunkQueue.Peek()!.TopLeftPosition.Y < chunk.TopLeftPosition.Y)
 				||
-				(ChunkQueue.Peek().TopLeftPosition.Y == chunk.TopLeftPosition.Y && ChunkQueue.Peek().TopLeftPosition.X < chunk.TopLeftPosition.X)
+				(ChunkQueue.Peek()!.TopLeftPosition.Y == chunk.TopLeftPosition.Y && ChunkQueue.Peek()!.TopLeftPosition.X < chunk.TopLeftPosition.X)
 			 )
 		)
 		{
 			QueueScrollOne();
 		}
-		if ((ChunkQueue.Peek() is null) || !(ChunkQueue.Peek().TopLeftPosition == chunk.TopLeftPosition))
+		if ((ChunkQueue.Peek() is null) || !(ChunkQueue.Peek()!.TopLeftPosition == chunk.TopLeftPosition))
 		{
 			ChunkQueue.Enqueue(chunk);
 		}
