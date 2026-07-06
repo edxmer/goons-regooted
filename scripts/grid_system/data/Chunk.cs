@@ -11,7 +11,7 @@ public partial class Chunk : Resource
 	
 	public readonly Entity?[,] EntityGrid = new Entity?[Global.CHUNK_SIZE, Global.CHUNK_SIZE];
 	
-	public List<Entity> Entities;
+	public List<UpdateableEntity> Entities;
 	
 	public Chunk(Map map,Vector2I TopLeftPosition)
 	{
@@ -116,13 +116,15 @@ public partial class Chunk : Resource
 	}
 	public bool IsEntityInUpdater(Entity entity)
 	{
-		return Entities.Contains(entity);
+		if (entity is UpdateableEntity upd)
+		{return Entities.Contains(upd);}
+		return false;
 	}
 	public void RemoveEntityFromUpdater(Entity entity)
 	{
 		if (IsEntityInUpdater(entity))
 		{
-			Entities.Remove(entity);
+			Entities.Remove((UpdateableEntity)entity);
 		}
 	}
 	
@@ -146,10 +148,15 @@ public partial class Chunk : Resource
 				{
 					ind++;
 				}
-				Entities.Insert(ind,entity);
+				Entities.Insert(ind,(UpdateableEntity)entity);
 				
 			}
 		}
 		return true;
+	}
+	public void updateChunk(int TickNumber)
+	{
+		List<Entity> doUpdateTo=new List<Entity> (Entities);
+		
 	}
 }
