@@ -169,7 +169,13 @@ public partial class Map : Resource
 	}
 	public void UpdateMap(int TickNumber)
 	{
-		
+		Chunk? scroller=QueueScrollOne();
+		while (scroller is not null)
+		{
+			((Chunk)scroller).UpdateChunk(TickNumber);
+			
+			scroller=QueueScrollOne();
+		}
 	}
 	
 }
