@@ -20,6 +20,7 @@ public partial class Map : Resource
 
 		_chunkQueue = new Queue<Chunk?>();
 		_chunkQueue.Enqueue(null);
+
 		for (int yc = 0; yc < Global.MAP_CHUNK_HEIGHT; yc++)
 		{
 			for (int xc = 0; xc < Global.MAP_CHUNK_WIDTH; xc++)
@@ -185,10 +186,8 @@ public partial class Map : Resource
 
 	public void UpdateMap(int TickNumber)
 	{
-		if (TickNumber<0 || TickNumber>19)
-		{
-			return;
-		}
+		if (TickNumber<0 || TickNumber>19) throw new Exception("Tick number is not within the allowed bound: [0, 20)");
+		
 		Chunk? scroller=QueueScrollOne();
 		while (scroller is not null)
 		{
