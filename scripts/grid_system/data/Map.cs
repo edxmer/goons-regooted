@@ -8,13 +8,13 @@ public partial class Map : Resource
 {
 
 	public Vector2I TopLeftPosition{get;private set;}
-	public Chunk?[,] MapChunks {get;private set;}
+	public Chunk?[,] MapChunks {get;private set;} // MapChunks[Y, X]
 
 	private Queue<Chunk?> _chunkQueue;
 
-	public Map(Vector2I TopLeftPosition) : base()
+	public Map() : base()
 	{
-		this.TopLeftPosition = TopLeftPosition;
+		TopLeftPosition = new Vector2I(-Global.MAP_CHUNK_HEIGHT * Global.CHUNK_SIZE / 2, -Global.MAP_CHUNK_WIDTH * Global.CHUNK_SIZE / 2);
 
 		MapChunks = new Chunk?[Global.MAP_CHUNK_HEIGHT, Global.MAP_CHUNK_WIDTH];
 
