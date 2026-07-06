@@ -9,9 +9,8 @@ public partial class Map : Resource
 	public Chunk?[,] MapChunks {get;private set;}
 
 	private Queue<Chunk?> ChunkQueue;
-	public Map(Vector2I TopLeftPosition)
+	public Map(Vector2I TopLeftPosition) : base()
 	{
-
 		this.TopLeftPosition = TopLeftPosition;
 
 		MapChunks = new Chunk?[Global.MAP_CHUNK_HEIGHT, Global.MAP_CHUNK_WIDTH];

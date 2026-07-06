@@ -13,7 +13,7 @@ public partial class Chunk : Resource
 	
 	public List<Entity> Entities;
 	
-	public Chunk(Map map,Vector2I TopLeftPosition)
+	public Chunk(Map map,Vector2I TopLeftPosition) : base()
 	{
 		myMap=map;
 		this.TopLeftPosition = TopLeftPosition;

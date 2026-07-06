@@ -32,7 +32,7 @@ public abstract partial class Entity : Resource
 	{
 		return SizeMap.GetLength(0);
 	}
-	public Entity(Map map, Vector2I TopLeftPos)
+	public Entity(Map map, Vector2I TopLeftPos) : base()
 	{
 		LastUpdatedTick=-1;
 		this.myMap = map;
