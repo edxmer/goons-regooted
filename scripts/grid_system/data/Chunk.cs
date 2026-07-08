@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public partial class Chunk : Resource
 {
 	/* --- PROPERTIES --- */
+	
 	public Vector2I TopLeftPosition { get; private set; }
 	public Map Map { get; private set; }
 
