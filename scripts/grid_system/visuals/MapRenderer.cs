@@ -20,6 +20,10 @@ public partial class MapRenderer : Node2D
 		);
 	}
 
+	// TODO: We need to create a signal that will call QueueRedraw() when something updates
+	// TODO: We should also add animations when tiles move, but only after 
+	// the basic functionalities are complete.
+
     public override void _Draw()
     {
         base._Draw();
@@ -45,7 +49,6 @@ public partial class MapRenderer : Node2D
 			{
 				Entity entity = Global.Map.GetEntityAtPos(new Vector2I(x, y));
 
-				GD.PrintRaw($"Drawing entity at position ({x}, {y})... ");
 
 				if (entity is not null && entity.Texture is not null)
 				{
@@ -56,10 +59,8 @@ public partial class MapRenderer : Node2D
 
 					DrawTextureRect(entity.Texture, rect, tile: false);
 
-					GD.PrintRaw("Success drawing texture.");
+					GD.Print($"Drawing entity at position ({x}, {y}).");
 				}
-
-				GD.Print("");
 			}
     }
 }
