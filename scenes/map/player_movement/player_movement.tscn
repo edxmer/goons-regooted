@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cutqbc5amo2rw"]
 
 [ext_resource type="Script" uid="uid://b5hohurtftdyw" path="res://scenes/map/player_movement/PlayerMovement.cs" id="1_yneg3"]
-[ext_resource type="Script" uid="uid://c7sx00f84qrsd" path="res://scenes/map/player_movement/Player_Camera.cs" id="2_imi5d"]
+[ext_resource type="Script" uid="uid://c7sx00f84qrsd" path="res://scenes/map/player_movement/PlayerCamera.cs" id="2_imi5d"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rulse"]
 
