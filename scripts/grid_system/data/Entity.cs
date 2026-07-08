@@ -1,4 +1,5 @@
 #nullable enable
+#pragma warning disable CS8618
 
 using Godot;
 using System;
@@ -8,11 +9,11 @@ using System.Collections.Generic;
 public abstract partial class Entity : Resource
 {
 	/* --- PROPERTIES --- */
-	[Export] public Texture2D Texture;
+	[Export] public Texture2D Texture { get; set; }
 
-	public int Weight { get; protected set; }
-	public bool IsOnMap { get; protected set; }
-	public int LastUpdatedTick;
+	public int Weight { get; protected set; } = 1;
+	public bool IsOnMap { get; protected set; } = false;
+	public int LastUpdatedTick = -1;
 	public Vector2I TopLeftPosition { get; set; }
 
 	/*Global pos, based on the map*/
@@ -23,20 +24,13 @@ public abstract partial class Entity : Resource
 			return TopLeftPosition % Global.CHUNK_SIZE;
 		}
 	}
-	public bool[,] SizeMap { get; protected set; }
-
-	private Map myMap;
+	public bool[,] Shape { get; protected set; } = new bool[,] { { true } };
 
 	/* --- CONSTRUCTOR --- */
 
-	public Entity(Map map, Vector2I TopLeftPos) : base()
+	public Entity(Vector2I TopLeftPos) : base()
 	{
-		LastUpdatedTick = -1;
-		this.myMap = map;
-		this.TopLeftPosition = TopLeftPos;
-		this.SizeMap = new bool[,] { { true } };
-		this.Weight = 1;
-		IsOnMap = false;
+		TopLeftPosition = TopLeftPos;
 	}
 
 	/* --- PUBLIC FUNCTIONS --- */
@@ -44,17 +38,17 @@ public abstract partial class Entity : Resource
 	/*true is something there, [y,x]*/
 	public int GetWidth()
 	{
-		return SizeMap.GetLength(1);
+		return Shape.GetLength(1);
 	}
 
 	public int GetHeight()
 	{
-		return SizeMap.GetLength(0);
+		return Shape.GetLength(0);
 	}
 
 	public Chunk? GetMyMainChunk()
 	{
-		return myMap.GetChunkAtPosForce(TopLeftPosition);
+		return Global.Map.GetChunkAtPosForce(TopLeftPosition);
 	}
 
 	public List<Vector2I> GetAllLocalPositions()
@@ -64,7 +58,7 @@ public abstract partial class Entity : Resource
 		{
 			for (int x = 0; x < GetWidth(); x++)
 			{
-				if (SizeMap[y, x])
+				if (Shape[y, x])
 				{
 					poses.Add(new Vector2I(x, y));
 				}
@@ -97,7 +91,7 @@ public abstract partial class Entity : Resource
 		List<Vector2I> localPoses = GetAllLocalPositions();
 		foreach (Vector2I local in localPoses)
 		{
-			var ch = myMap.GetChunkAtPosForce(EnLocalPositionToGlobal(local));
+			var ch = Global.Map.GetChunkAtPosForce(EnLocalPositionToGlobal(local));
 			if (!(ch is null) && !chunks.Contains(ch))
 			{
 				chunks.Add(ch);
@@ -116,7 +110,7 @@ public abstract partial class Entity : Resource
 		List<Vector2I> poses = GetAllContainedPositions();
 		foreach (Vector2I pos in poses)
 		{
-			Chunk? chCur = myMap.GetChunkAtPosIfLoaded(pos);
+			Chunk? chCur = Global.Map.GetChunkAtPosIfLoaded(pos);
 			if (chCur is not null)
 			{
 				chCur.RemoveEntitySlotFromGlobalPos(this, pos);
@@ -132,7 +126,7 @@ public abstract partial class Entity : Resource
 		List<Vector2I> poses = GetAllLocalPositions();
 
 		int ind = 0;
-		while (ind < poses.Count && myMap.IsEntityOrNullAtPosForce(this, TopLeftPosition + poses[ind]))
+		while (ind < poses.Count && Global.Map.IsEntityOrNullAtPosForce(this, TopLeftPosition + poses[ind]))
 		{ ind++; }
 		return (ind >= poses.Count);
 	}
@@ -180,7 +174,7 @@ public abstract partial class Entity : Resource
 		IsOnMap = true;
 		foreach (Vector2I globalPos in poses)
 		{
-			bool Success = myMap.SetPosToSafe(this, globalPos);
+			bool Success = Global.Map.SetPosToSafe(this, globalPos);
 			if (!Success)
 			{
 				RemoveFromMap();
