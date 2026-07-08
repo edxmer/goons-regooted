@@ -23,6 +23,11 @@ public partial class MapRenderer : Node2D
 			new TestStaticEntity(new Vector2I(1, 1)) { Texture = GD.Load<Texture2D>("res://assets/sprites/items/rock/spr_item_rock.png") },
 			new Vector2I(1, 1)
 		);
+
+		Global.Map.SetPosTo(
+			new TestStaticEntity(new Vector2I(2, 1)) { Texture = GD.Load<Texture2D>("res://assets/sprites/items/rock/spr_item_rock.png") },
+			new Vector2I(2, 1)
+		);
 	}
 
 	// TODO: We need to create a signal that will call QueueRedraw() when something updates
@@ -58,14 +63,15 @@ public partial class MapRenderer : Node2D
 
 				if (entity is not null && entity.Texture is not null && entity.TopLeftPosition == coords)
 				{
+					Vector2 rectTopLeftCorner = new Vector2(x * PixelsPerTile, y * PixelsPerTile);
+					Vector2 rectSize = new Vector2(entity.GetWidth() * PixelsPerTile, entity.GetHeight() * PixelsPerTile);
+
 					var rect = new Rect2(
-						new Vector2(x * PixelsPerTile, y * PixelsPerTile),
-						new Vector2((x + entity.GetWidth()) * PixelsPerTile, (y + entity.GetHeight()) * PixelsPerTile)
+						rectTopLeftCorner,
+						rectSize
 					);
 
 					DrawTextureRect(entity.Texture, rect, tile: false);
-
-					GD.Print($"Drawing entity at position ({x}, {y}).");
 				}
 			}
 	}
