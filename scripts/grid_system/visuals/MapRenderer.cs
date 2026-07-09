@@ -25,7 +25,10 @@ public partial class MapRenderer : Node2D
 		);
 
 		Global.Map.SetPosTo(
-			new TestStaticEntity(new Vector2I(2, 1)) { Texture = GD.Load<Texture2D>("res://assets/sprites/items/rock/spr_item_rock.png") },
+			new TestStaticEntity(new Vector2I(2, 1)) { 
+				Texture = GD.Load<Texture2D>("res://assets/sprites/items/rock/spr_item_rock.png"),
+				Shape = new bool[,] { {true, true} }
+				},
 			new Vector2I(2, 1)
 		);
 	}
@@ -57,6 +60,12 @@ public partial class MapRenderer : Node2D
 		for (int x = topLeftCoords.X; x <= botRightCoords.X; ++x)
 			for (int y = topLeftCoords.Y; y <= botRightCoords.Y; ++y)
 			{
+				// TODO: Draw Biome
+
+				
+
+				// Draw entity
+
 				Entity entity = Global.Map.GetEntityAtPos(new Vector2I(x, y));
 
 				var coords = new Vector2I(x, y);

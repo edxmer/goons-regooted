@@ -24,7 +24,7 @@ public abstract partial class Entity : Resource
 			return TopLeftPosition % Global.CHUNK_SIZE;
 		}
 	}
-	public bool[,] Shape { get; protected set; } = new bool[,] { { true } };
+	public bool[,] Shape { get; set; } = new bool[,] { { true } };
 
 	/* --- CONSTRUCTOR --- */
 
